@@ -21,8 +21,14 @@ export class GameManager {
     }
 
     removeUser(socket: WebSocket) {
+        console.log("User is leaving: ", socket)
         this.users = this.users.filter(user => user !== socket);
-        // Stop the game here because the user left
+        const game = this.games.find(game => game.player1 === socket || game.player2 === socket);
+        if (game) {
+            // Stop the game here because the user left
+            game.endGame();
+        }
+        this.games = this.games.filter(game => game.player1 !== socket && game.player2 !== socket);
     }
 
     private addHandler(socket: WebSocket) {
